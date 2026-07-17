@@ -74,12 +74,12 @@ export async function onRequest(context) {
     }
     
     try {
-        if (pathname === '/api/start-task' && request.method === 'POST') {
+        if (pathname.endsWith('/api/start-task') && request.method === 'POST') {
             var taskId = 'task-' + Date.now();
             context.waitUntil(runAggregation(taskId, env));
             return jsonResponse({ message: '任务已启动', taskId: taskId });
         }
-        if (pathname === '/api/task-status') {
+        if (pathname.endsWith('/api/task-status')) {
             var taskId2 = url.searchParams.get('taskId');
             if (!taskId2) return jsonResponse({ error: '缺少 taskId' }, 400);
             if (!env.TVBOX_KV) return jsonResponse({ error: 'KV 未绑定' }, 500);
@@ -87,7 +87,7 @@ export async function onRequest(context) {
             if (!taskStateJson) return jsonResponse({ status: 'pending', logs: '正在初始化...' });
             return jsonResponse(JSON.parse(taskStateJson));
         }
-        if (pathname === '/subscribe.json') {
+        if (pathname.endsWith('/subscribe.json')) {
             if (!env.TVBOX_KV) return jsonResponse({ note: "KV 未绑定" }, 500);
             var latestResult = await env.TVBOX_KV.get('latest_aggregated_result');
             if (!latestResult) return jsonResponse({ note: "尚未生成聚合数据" }, 404);
