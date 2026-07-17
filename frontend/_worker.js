@@ -46,7 +46,7 @@ async function startTask(){
   btn.disabled=true;
   btn.textContent='正在运行...';
   log.textContent='';
-  function addLog(msg,cls){log.innerHTML+=`<span class="${cls||''}">${msg}</span>\n`;log.scrollTop=log.scrollHeight;}
+  function addLog(msg,cls){log.innerHTML+='<span class="'+(cls||'')+'">'+msg+'</span>\n';log.scrollTop=log.scrollHeight;}
   try{
     addLog('正在启动聚合任务...','info');
     const res=await fetch('/api/start-task',{method:'POST'});
@@ -59,8 +59,8 @@ async function startTask(){
       const statusRes=await fetch('/api/task-status?taskId='+data.taskId);
       const status=await statusRes.json();
       addLog(status.logs||'',status.status==='completed'?'success':status.status==='failed'?'error':'');
-      if(status.status==='completed'){addLog('✅ 任务成功完成！','success');addLog('订阅地址: /subscribe.json','info');break;}
-      if(status.status==='failed'){addLog('❌ 任务失败: '+(status.error||'未知错误'),'error');break;}
+     if(status.status==='completed'){addLog('\u2705 任务成功完成！','success');addLog('订阅地址: /subscribe.json','info');break;}
+     if(status.status==='failed'){addLog('\u274c 任务失败: '+(status.error||'未知错误'),'error');break;}
       attempts++;
     }
     if(attempts>=60) addLog('⚠️ 任务超时，请刷新页面重试','error');
