@@ -1,4 +1,4 @@
-export default {
+ export default {
   async fetch(request, env, ctx) {
     var u = new URL(request.url);
     var p = u.pathname;
